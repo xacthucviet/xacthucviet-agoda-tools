@@ -2,12 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <!-- Viewport fix cho iOS -->
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
-
   <title>Agoda Search Widget</title>
 
   <style>
@@ -20,7 +18,6 @@
       overflow-x: hidden;
       overflow-y: auto;
       -webkit-text-size-adjust: 100%;
-      touch-action: manipulation;
       transform-origin: 0 0;
       zoom: 1 !important;
     }
@@ -44,13 +41,6 @@
       -webkit-text-size-adjust: none !important;
       -webkit-appearance: none !important;
     }
-
-    /* Bảo đảm không co giãn khi bàn phím mở */
-    @supports (-webkit-touch-callout: none) {
-      body {
-        height: 100vh;
-      }
-    }
   </style>
 </head>
 
@@ -59,9 +49,8 @@
     <div id="adgshp1134854488"></div>
   </div>
 
-  <!-- Agoda widget -->
+  <!-- Agoda script -->
   <script src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-
   <script>
     var stg = new Object();
     stg.crt = "9963919083159";
@@ -79,15 +68,26 @@
     new AgdSherpa(stg).initialize();
   </script>
 
-  <!-- ✅ Force giữ scale 1:1 sau khi focus input -->
+  <!-- ✅ iOS Viewport Reset Hack -->
   <script>
-    document.addEventListener('focusin', function () {
-      document.body.style.transform = 'scale(1)';
-      document.body.style.zoom = '1';
-    });
-    document.addEventListener('touchmove', function (e) {
-      if (e.scale !== 1) e.preventDefault();
-    }, { passive: false });
+    (function () {
+      const meta = document.querySelector('meta[name=viewport]');
+      const original = meta.getAttribute('content');
+
+      function disableZoom() {
+        meta.setAttribute(
+          'content',
+          'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+        );
+      }
+
+      function enableZoom() {
+        meta.setAttribute('content', original);
+      }
+
+      document.addEventListener('focusin', disableZoom);  // Khi focus input
+      document.addEventListener('focusout', enableZoom);  // Khi blur input
+    })();
   </script>
 </body>
 </html>
