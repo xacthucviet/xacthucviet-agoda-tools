@@ -2,10 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <!-- ✅ Viewport tối ưu chống zoom iOS -->
+  <!-- Viewport fix cho iOS -->
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
 
   <title>Agoda Search Widget</title>
@@ -16,16 +16,15 @@
       padding: 0;
       width: 100%;
       height: 100%;
+      background: transparent;
       overflow-x: hidden;
       overflow-y: auto;
-      background: transparent;
       -webkit-text-size-adjust: 100%;
       touch-action: manipulation;
       transform-origin: 0 0;
       zoom: 1 !important;
     }
 
-    /* Căn giữa widget */
     .widget-wrapper {
       display: flex;
       justify-content: center;
@@ -35,12 +34,22 @@
       overflow: visible;
       position: relative;
       z-index: 9999;
+      -webkit-transform: translateZ(0);
     }
 
     /* ✅ Ngăn iOS zoom khi focus input */
     input, select, textarea, button {
       font-size: 16px !important;
-      -webkit-appearance: none;
+      line-height: 1.4 !important;
+      -webkit-text-size-adjust: none !important;
+      -webkit-appearance: none !important;
+    }
+
+    /* Bảo đảm không co giãn khi bàn phím mở */
+    @supports (-webkit-touch-callout: none) {
+      body {
+        height: 100vh;
+      }
     }
   </style>
 </head>
@@ -50,13 +59,10 @@
     <div id="adgshp1134854488"></div>
   </div>
 
-  <!-- Agoda widget script -->
-  <script
-    type="text/javascript"
-    src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"
-  ></script>
+  <!-- Agoda widget -->
+  <script src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
 
-  <script type="text/javascript">
+  <script>
     var stg = new Object();
     stg.crt = "9963919083159";
     stg.version = "1.04";
@@ -73,16 +79,15 @@
     new AgdSherpa(stg).initialize();
   </script>
 
-  <!-- ✅ JS phụ trợ đảm bảo không zoom khi focus -->
+  <!-- ✅ Force giữ scale 1:1 sau khi focus input -->
   <script>
-    window.addEventListener('load', () => {
-      document.querySelectorAll('input, select, textarea, button').forEach(el => {
-        el.addEventListener('focus', () => {
-          document.body.style.zoom = "1";
-          document.documentElement.style.zoom = "1";
-        });
-      });
+    document.addEventListener('focusin', function () {
+      document.body.style.transform = 'scale(1)';
+      document.body.style.zoom = '1';
     });
+    document.addEventListener('touchmove', function (e) {
+      if (e.scale !== 1) e.preventDefault();
+    }, { passive: false });
   </script>
 </body>
 </html>
