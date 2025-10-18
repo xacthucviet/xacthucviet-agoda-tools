@@ -2,7 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <!-- Quan trọng nhất: user-scalable=no + maximum-scale=1 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Agoda Search Widget</title>
   <style>
     html, body {
@@ -14,11 +15,9 @@
       overflow-y: auto;
       background: transparent;
       -webkit-text-size-adjust: 100%;
-      transform-origin: 0 0;
-      zoom: 1 !important;
     }
 
-    /* Căn giữa widget nếu cần */
+    /* Căn giữa widget */
     .widget-wrapper {
       display: flex;
       justify-content: center;
@@ -30,9 +29,17 @@
       z-index: 9999;
     }
 
-    /* Fix zoom khi nhấn input trên iOS */
+    /* Ngăn iOS zoom khi nhấn input */
     input, select, textarea, button {
       font-size: 16px !important;
+      line-height: 1.4 !important;
+    }
+
+    /* Đảm bảo khung đúng kích thước */
+    #adgshp1134854488 {
+      width: 300px;
+      height: 250px;
+      max-width: 100%;
     }
   </style>
 </head>
@@ -41,9 +48,9 @@
     <div id="adgshp1134854488"></div>
   </div>
 
-  <script type="text/javascript" src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
-  <script type="text/javascript">
-    var stg = new Object();
+  <script src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
+  <script>
+    var stg = {};
     stg.crt = "9963919083159";
     stg.version = "1.04";
     stg.id = stg.name = "adgshp1134854488";
@@ -53,7 +60,7 @@
     stg.Layout = "Square";
     stg.Language = "vi-vn";
     stg.Cid = "1950843";
-    stg.City = "16264";
+    stg.City = "16264"; // Phan Thiết
     stg.DestinationName = "Phan Thiết, Việt Nam";
     stg.OverideConf = false;
     new AgdSherpa(stg).initialize();
