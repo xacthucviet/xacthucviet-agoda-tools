@@ -1,93 +1,70 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-  />
-  <title>Agoda Search Widget</title>
-
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-text-size-adjust: 100%;
-      transform-origin: 0 0;
-      zoom: 1 !important;
-    }
-
-    .widget-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      width: 100%;
-      height: auto;
-      overflow: visible;
-      position: relative;
-      z-index: 9999;
-      -webkit-transform: translateZ(0);
-    }
-
-    /* ✅ Ngăn iOS zoom khi focus input */
-    input, select, textarea, button {
-      font-size: 16px !important;
-      line-height: 1.4 !important;
-      -webkit-text-size-adjust: none !important;
-      -webkit-appearance: none !important;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Agoda Search Widget</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  .widget-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  input, select, textarea, button {
+    font-size: 16px !important; /* ✅ chống zoom */
+    line-height: 1.4;
+    -webkit-appearance: none;
+  }
+</style>
 </head>
-
 <body>
   <div class="widget-wrapper">
     <div id="adgshp1134854488"></div>
   </div>
 
-  <!-- Agoda script -->
   <script src="//cdn0.agoda.net/images/sherpa/js/sherpa_init1_08.min.js"></script>
   <script>
     var stg = new Object();
-    stg.crt = "9963919083159";
-    stg.version = "1.04";
-    stg.id = stg.name = "adgshp1134854488";
-    stg.width = "300px";
-    stg.height = "250px";
-    stg.ReferenceKey = "esMvFFB9Yqj7ourN0hnRjg==";
-    stg.Layout = "Square";
-    stg.Language = "vi-vn";
-    stg.Cid = "1950843";
-    stg.City = "16264";
-    stg.DestinationName = "Phan Thiết, Việt Nam";
-    stg.OverideConf = false;
+    stg.crt="9963919083159";
+    stg.version="1.04";
+    stg.id=stg.name="adgshp1134854488";
+    stg.width="300px";
+    stg.height="250px";
+    stg.ReferenceKey="esMvFFB9Yqj7ourN0hnRjg==";
+    stg.Layout="Square";
+    stg.Language="vi-vn";
+    stg.Cid="1950843";
+    stg.City="16264";
+    stg.DestinationName="Phan Thiết, Việt Nam";
+    stg.OverideConf=false;
     new AgdSherpa(stg).initialize();
   </script>
 
-  <!-- ✅ iOS Viewport Reset Hack -->
   <script>
-    (function () {
-      const meta = document.querySelector('meta[name=viewport]');
-      const original = meta.getAttribute('content');
+    // ✅ Gửi thông báo focus/blur tới parent (Softr)
+    function sendMsg(type) { window.parent.postMessage(type, "*"); }
 
-      function disableZoom() {
-        meta.setAttribute(
-          'content',
-          'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
-        );
-      }
-
-      function enableZoom() {
-        meta.setAttribute('content', original);
-      }
-
-      document.addEventListener('focusin', disableZoom);  // Khi focus input
-      document.addEventListener('focusout', enableZoom);  // Khi blur input
-    })();
+    const observer = new MutationObserver(() => {
+      const input = document.querySelector("input");
+      if (!input) return;
+      input.addEventListener("focus", () => sendMsg("agoda-focus"));
+      input.addEventListener("blur", () => sendMsg("agoda-blur"));
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
   </script>
 </body>
 </html>
